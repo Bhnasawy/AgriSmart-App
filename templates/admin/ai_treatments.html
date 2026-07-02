@@ -1,0 +1,147 @@
+{% extends "admin/base.html" %}
+{% block title %}Disease Treatments{% endblock %}
+{% block page_title %}Treatment Management{% endblock %}
+{% block breadcrumb %}
+<li class="breadcrumb-item">AI Intelligence</li>
+<li class="breadcrumb-item active">Treatments</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-12">
+    <div class="bg-white rounded-xl p-4 shadow-sm mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-700 mb-0"><i class="bi bi-bandaid text-primary me-2"></i>Disease Treatments Library</h5>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addTreatmentModal">
+          <i class="bi bi-plus-circle me-1"></i> Add Treatment
+        </button>
+      </div>
+      <p class="text-muted small">These treatments are automatically suggested when the AI diagnoses a specific tomato leaf disease.</p>
+
+      <div class="table-responsive">
+        <table class="table admin-table table-hover align-middle">
+          <thead>
+            <tr>
+              <th>Disease Class (Model)</th>
+              <th>Display Name</th>
+              <th>Treatment</th>
+              <th>Pesticide</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for t in treatments %}
+            <tr>
+              <td class="fw-600 text-muted small" style="white-space: nowrap;">{{ t.disease_name }}</td>
+              <td class="fw-700 text-dark">{{ t.disease_display_name or '-' }}</td>
+              <td>
+                <div class="small text-truncate" style="max-width: 250px;" title="{{ t.treatment }}">
+                  {{ t.treatment }}
+                </div>
+              </td>
+              <td>
+                <div class="small text-truncate" style="max-width: 200px;" title="{{ t.pesticide }}">
+                  {{ t.pesticide or '-' }}
+                </div>
+              </td>
+              <td class="text-end" style="white-space: nowrap;">
+                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editTreatmentModal{{ t.id }}">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <form action="{{ url_for('main.admin_ai_treatment_delete', t_id=t.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this treatment?');">
+                  <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                </form>
+              </td>
+            </tr>
+
+            <!-- Edit Modal -->
+            <div class="modal fade" id="editTreatmentModal{{ t.id }}" tabindex="-1">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title fw-700">Edit Treatment: {{ t.disease_display_name or t.disease_name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  </div>
+                  <form action="{{ url_for('main.admin_ai_treatment_edit', t_id=t.id) }}" method="POST">
+                    <div class="modal-body">
+                      <div class="mb-3">
+                        <label class="form-label fw-600 small text-muted">Disease Class (Model Output)</label>
+                        <input type="text" class="form-control" value="{{ t.disease_name }}" disabled>
+                        <div class="form-text">Cannot be changed. This must match the ML model exactly.</div>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label fw-600">Display Name</label>
+                        <input type="text" class="form-control" name="disease_display_name" value="{{ t.disease_display_name or '' }}">
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label fw-600">Recommended Treatment *</label>
+                        <textarea class="form-control" name="treatment" rows="3" required>{{ t.treatment }}</textarea>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label fw-600">Suggested Pesticide</label>
+                        <textarea class="form-control" name="pesticide" rows="2">{{ t.pesticide or '' }}</textarea>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label fw-600">Additional Notes</label>
+                        <textarea class="form-control" name="notes" rows="2">{{ t.notes or '' }}</textarea>
+                      </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <tr><td colspan="5" class="text-center text-muted py-4">No treatments configured.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addTreatmentModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-700">Add New Disease Treatment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="{{ url_for('main.admin_ai_treatment_add') }}" method="POST">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-600">Disease Class (Model Output) *</label>
+            <input type="text" class="form-control" name="disease_name" required placeholder="e.g., Tomato___Early_blight">
+            <div class="form-text text-danger">Must exactly match the string output by the ML model.</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-600">Display Name</label>
+            <input type="text" class="form-control" name="disease_display_name" placeholder="e.g., Early Blight">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-600">Recommended Treatment *</label>
+            <textarea class="form-control" name="treatment" rows="3" required placeholder="Describe the treatment..."></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-600">Suggested Pesticide</label>
+            <textarea class="form-control" name="pesticide" rows="2" placeholder="List recommended chemicals..."></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-600">Additional Notes</label>
+            <textarea class="form-control" name="notes" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Treatment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

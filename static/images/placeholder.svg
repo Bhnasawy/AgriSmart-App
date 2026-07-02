@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="#e8f5e9"/>
+  <rect x="140" y="80" width="120" height="100" rx="8" fill="#c8e6c9"/>
+  <path d="M160 140 Q200 100 240 140" stroke="#4caf50" stroke-width="3" fill="none"/>
+  <circle cx="200" cy="120" r="20" fill="#4caf50" opacity="0.3"/>
+  <text x="200" y="210" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#2e7d32">Product Image</text>
+  <text x="200" y="230" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#66bb6a">Not Available</text>
+</svg>

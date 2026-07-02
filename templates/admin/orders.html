@@ -1,0 +1,92 @@
+{% extends "admin/base.html" %}
+{% block title %}Manage Orders{% endblock %}
+{% block page_title %}Manage Orders{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Orders</li>{% endblock %}
+
+{% block content %}
+
+<!-- Filter Bar -->
+<div class="bg-white rounded-xl p-3 mb-4 d-flex gap-2 flex-wrap align-items-center"
+     style="box-shadow:var(--shadow-sm);">
+  <span class="fw-600 me-2">Filter by Status:</span>
+  {% set statuses = ['', 'Pending', 'Confirmed', 'Shipped', 'Delivered'] %}
+  {% set labels   = ['All', 'Pending', 'Confirmed', 'Shipped', 'Delivered'] %}
+  {% for i in range(statuses|length) %}
+  <a href="{{ url_for('main.admin_orders', status=statuses[i]) }}"
+     class="btn btn-sm {{ 'btn-primary' if status_filter == statuses[i] else 'btn-outline-secondary' }}">
+    {{ labels[i] }}
+  </a>
+  {% endfor %}
+  <div class="ms-auto text-muted small">{{ orders|length }} order{{ 's' if orders|length != 1 else '' }} found</div>
+</div>
+
+<!-- Orders Table -->
+<div class="bg-white rounded-xl overflow-hidden" style="box-shadow:var(--shadow-sm);">
+  <div class="table-responsive">
+    <table class="table admin-table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Contact</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Payment</th>
+          <th>Date</th>
+          <th class="text-center">Status</th>
+          <th class="text-center">Update</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td class="fw-700 text-success">#{{ '%04d'|format(order.id) }}</td>
+          <td>
+            <div class="fw-600">{{ order.full_name }}</div>
+            <div class="small text-muted">{{ order.address[:40] }}{% if order.address|length > 40 %}â€¦{% endif %}</div>
+          </td>
+          <td class="small text-muted">
+            <div><i class="bi bi-envelope me-1"></i>{{ order.email }}</div>
+            <div><i class="bi bi-telephone me-1"></i>{{ order.phone }}</div>
+          </td>
+          <td>
+            <span class="badge bg-light text-dark border">{{ order.items|length }} item{{ 's' if order.items|length != 1 else '' }}</span>
+          </td>
+          <td class="fw-700 text-success">{{ "%.2f"|format(order.total_price) }} EGP</td>
+          <td class="small">{{ order.payment_method }}</td>
+          <td class="small text-muted">{{ order.created_at.strftime('%b %d, %Y') }}</td>
+          <td class="text-center">
+            <span class="status-badge status-{{ order.status.lower() }}">{{ order.status }}</span>
+          </td>
+          <td class="text-center">
+            <div class="d-flex gap-1 justify-content-center">
+              <form action="{{ url_for('main.admin_update_order_status', order_id=order.id) }}" method="POST">
+                <select name="status" class="form-select form-select-sm" style="width:130px;"
+                        onchange="submitStatusForm(this)">
+                  {% for s in ['Pending', 'Confirmed', 'Shipped', 'Delivered'] %}
+                  <option value="{{ s }}" {{ 'selected' if order.status == s else '' }}>{{ s }}</option>
+                  {% endfor %}
+                </select>
+              </form>
+              <form action="{{ url_for('main.admin_delete_order', order_id=order.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this order?');">
+                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Order">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="9" class="text-center py-5 text-muted">
+            <i class="bi bi-bag-x" style="font-size:2rem;display:block;margin-bottom:8px;"></i>
+            No orders found{{ ' with status "' + status_filter + '"' if status_filter else '' }}.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

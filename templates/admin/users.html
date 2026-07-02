@@ -1,0 +1,68 @@
+{% extends "admin/base.html" %}
+{% block title %}Manage Users{% endblock %}
+{% block page_title %}Registered Users{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Users</li>{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <span class="badge bg-success fs-6">{{ users|length }} Total Users</span>
+</div>
+
+<div class="bg-white rounded-xl overflow-hidden" style="box-shadow:var(--shadow-sm);">
+  <div class="table-responsive">
+    <table class="table admin-table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Avatar</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th class="text-center">Role</th>
+          <th class="text-center">Orders</th>
+          <th>Joined</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td class="text-muted small">{{ user.id }}</td>
+          <td>
+            <div style="width:40px;height:40px;border-radius:50%;
+                        background:{{ 'linear-gradient(135deg,#ff8f00,#ffb300)' if user.is_admin() else 'linear-gradient(135deg,#2e7d32,#4caf50)' }};
+                        display:flex;align-items:center;justify-content:center;
+                        color:#fff;font-weight:800;font-size:1rem;">
+              {{ user.username[0].upper() }}
+            </div>
+          </td>
+          <td class="fw-700">{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td class="text-muted small">{{ user.phone or '—' }}</td>
+          <td class="text-center">
+            {% if user.is_admin() %}
+            <span class="badge bg-warning text-dark">
+              <i class="bi bi-shield-fill me-1"></i>Admin
+            </span>
+            {% else %}
+            <span class="badge bg-success text-white">
+              <i class="bi bi-person-fill me-1"></i>User
+            </span>
+            {% endif %}
+          </td>
+          <td class="text-center">
+            <span class="badge bg-light text-dark border">{{ user.orders|length }}</span>
+          </td>
+          <td class="small text-muted">{{ user.created_at.strftime('%b %d, %Y') }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="8" class="text-center py-4 text-muted">No users registered.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

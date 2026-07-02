@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}About Us{% endblock %}
+{% block meta_description %}Learn about Agri Smart - our mission, values, and commitment to empowering farmers with quality agricultural products.{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="about-hero text-center">
+  <div class="container">
+    <h1 class="fw-800 mb-3" style="font-size:2.8rem;">About <span style="color:#ffb300;">Agri Smart</span></h1>
+    <p class="mb-0 opacity-75" style="font-size:1.15rem;max-width:600px;margin:auto;">
+      Empowering farmers with quality products, smart technology, and expert knowledge
+      for a more productive and sustainable future.
+    </p>
+  </div>
+</section>
+
+<!-- Mission -->
+<section class="py-5">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-6">
+        <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&q=80"
+             alt="Farming Mission" class="img-fluid rounded-xl shadow-green" style="height:380px;object-fit:cover;" />
+      </div>
+      <div class="col-lg-6">
+        <span class="badge bg-success bg-opacity-10 text-success mb-3">Our Mission</span>
+        <h2 class="section-title mb-3">Growing Together for a Better Tomorrow</h2>
+        <p class="text-muted mb-3" style="line-height:1.8;">
+          Agri Smart was founded with a simple mission: to make quality agricultural products
+          accessible to every farmer, regardless of their location. We believe that when
+          farmers have access to the right tools, seeds, and knowledge, entire communities thrive.
+        </p>
+        <p class="text-muted" style="line-height:1.8;">
+          From small family farms to large agricultural enterprises, we serve farmers across
+          the region with a carefully curated selection of certified products at competitive prices.
+        </p>
+        <div class="row g-3 mt-2">
+          <div class="col-6">
+            <div class="p-3 rounded-xl bg-pale-green text-center">
+              <div class="fw-800 text-success" style="font-size:1.8rem;">10K+</div>
+              <div class="small text-muted">Happy Farmers</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-3 rounded-xl bg-pale-green text-center">
+              <div class="fw-800 text-success" style="font-size:1.8rem;">500+</div>
+              <div class="small text-muted">Products Listed</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-3 rounded-xl bg-pale-green text-center">
+              <div class="fw-800 text-success" style="font-size:1.8rem;">6</div>
+              <div class="small text-muted">Categories</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-3 rounded-xl bg-pale-green text-center">
+              <div class="fw-800 text-success" style="font-size:1.8rem;">5★</div>
+              <div class="small text-muted">Customer Rating</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Values -->
+<section class="py-5 bg-pale-green">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title text-center">Our Core Values</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="team-card h-100">
+          <div class="team-avatar"><i class="bi bi-patch-check-fill"></i></div>
+          <h5 class="fw-700">Quality First</h5>
+          <p class="text-muted small">Every product is rigorously tested and certified before reaching our shelves. We never compromise on quality.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="team-card h-100">
+          <div class="team-avatar"><i class="bi bi-heart-fill text-danger"></i></div>
+          <h5 class="fw-700">Farmer-Centric</h5>
+          <p class="text-muted small">We listen to farmers, understand their needs, and constantly improve our product selection based on real feedback.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="team-card h-100">
+          <div class="team-avatar"><i class="bi bi-globe-americas"></i></div>
+          <h5 class="fw-700">Sustainability</h5>
+          <p class="text-muted small">We prioritize eco-friendly products and sustainable farming practices to protect the environment for future generations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5 text-center" style="background:linear-gradient(135deg,#1b5e20,#2e7d32);">
+  <div class="container text-white">
+    <h2 class="fw-800 mb-3">Ready to Start Farming Smarter?</h2>
+    <p class="opacity-75 mb-4">Join Agri Smart today and discover a better way to farm.</p>
+    <a href="{{ url_for('main.register') }}" class="btn btn-accent btn-lg px-5 me-3">
+      Get Started
+    </a>
+    <a href="{{ url_for('main.contact') }}" class="btn btn-lg px-5"
+       style="border:2px solid rgba(255,255,255,0.5);color:#fff;">
+      Contact Us
+    </a>
+  </div>
+</section>
+
+{% endblock %}

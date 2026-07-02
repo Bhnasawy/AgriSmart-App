@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="{% block meta_description %}Agri Smart - Your trusted online agriculture store for fertilizers, seeds, tools, and more.{% endblock %}" />
+  <title>{% block title %}Agri Smart{% endblock %} | Agriculture E-Commerce</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- =========================================================================
+     NAVBAR
+     ========================================================================= -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <!-- Brand -->
+    <a class="navbar-brand" href="{{ url_for('main.index') }}">
+      <span class="brand-icon">🌿</span>Agri<span style="color:#ffb300;">Smart</span>
+    </a>
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Nav Links -->
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'main.index' %}active{% endif %}"
+             href="{{ url_for('main.index') }}">
+            <i class="bi bi-house-fill me-1"></i>Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'main.shop' %}active{% endif %}"
+             href="{{ url_for('main.shop') }}">
+            <i class="bi bi-shop me-1"></i>Shop
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'main.categories' %}active{% endif %}"
+             href="{{ url_for('main.categories') }}">
+            <i class="bi bi-grid me-1"></i>Categories
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'main.about' %}active{% endif %}"
+             href="{{ url_for('main.about') }}">
+            <i class="bi bi-info-circle me-1"></i>About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'main.contact' %}active{% endif %}"
+             href="{{ url_for('main.contact') }}">
+            <i class="bi bi-envelope me-1"></i>Contact
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle {% if 'ai_' in (request.endpoint or '') %}active{% endif %}"
+             href="#" data-bs-toggle="dropdown" id="aiNavDropdown" aria-expanded="false">
+            <i class="bi bi-cpu-fill me-1"></i>AI Tools
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="aiNavDropdown">
+            <li>
+              <a class="dropdown-item" href="{{ url_for('main.ai_crop') }}">
+                <i class="bi bi-flower3 me-2 text-success"></i>Crop Recommendation
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{{ url_for('main.ai_tomato') }}">
+                <i class="bi bi-camera me-2 text-danger"></i>Tomato Diagnosis
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Right Nav -->
+      <ul class="navbar-nav align-items-lg-center gap-1">
+        {% if current_user.is_authenticated %}
+          <!-- Cart -->
+          <li class="nav-item cart-badge">
+            <a class="nav-link" href="{{ url_for('main.cart') }}" id="cartNavLink">
+              <i class="bi bi-cart3 fs-5"></i>
+              {% if cart_count > 0 %}
+              <span class="cart-count">{{ cart_count }}</span>
+              {% endif %}
+            </a>
+          </li>
+
+          <!-- User Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-1" href="#"
+               data-bs-toggle="dropdown">
+              <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.25);
+                          display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;">
+                {{ current_user.username[0].upper() }}
+              </div>
+              {{ current_user.username }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="{{ url_for('main.profile') }}">
+                  <i class="bi bi-person me-2 text-success"></i>My Profile
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{{ url_for('main.my_orders') }}">
+                  <i class="bi bi-bag-check me-2 text-success"></i>My Orders
+                </a>
+              </li>
+              {% if current_user.is_admin() %}
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item text-success fw-bold" href="{{ url_for('main.admin_dashboard') }}">
+                  <i class="bi bi-speedometer2 me-2"></i>Admin Panel
+                </a>
+              </li>
+              {% endif %}
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item text-danger" href="{{ url_for('main.logout') }}">
+                  <i class="bi bi-box-arrow-right me-2"></i>Logout
+                </a>
+              </li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'main.login' %}active{% endif %}" href="{{ url_for('main.login') }}">
+              <i class="bi bi-person me-1"></i>Login
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link ms-1 {% if request.endpoint == 'main.register' %}active{% endif %}" href="{{ url_for('main.register') }}">
+              Register
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- =========================================================================
+     FLASH MESSAGES
+     ========================================================================= -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="flash-container">
+  {% for category, message in messages %}
+  <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible flash-alert" role="alert">
+    <i class="bi bi-{% if category == 'success' %}check-circle{% elif category == 'danger' or category == 'error' %}exclamation-triangle{% elif category == 'warning' %}exclamation-circle{% else %}info-circle{% endif %} me-2"></i>
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<!-- =========================================================================
+     MAIN CONTENT
+     ========================================================================= -->
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<!-- =========================================================================
+     FOOTER
+     ========================================================================= -->
+<footer class="footer">
+  <div class="container">
+    <div class="row g-4">
+      <!-- About Column -->
+      <div class="col-lg-4 col-md-6">
+        <h5><span style="font-size:1.3rem;">🌿</span> Agri Smart</h5>
+        <p style="opacity:0.8;font-size:0.92rem;line-height:1.7;">
+          Your trusted online marketplace for quality agricultural products.
+          We connect farmers with the best fertilizers, seeds, tools, and technology
+          for a productive and sustainable harvest.
+        </p>
+        <div class="mt-3">
+          <a class="social-link" href="#" title="Facebook"><i class="bi bi-facebook"></i></a>
+          <a class="social-link" href="#" title="Twitter"><i class="bi bi-twitter-x"></i></a>
+          <a class="social-link" href="#" title="Instagram"><i class="bi bi-instagram"></i></a>
+          <a class="social-link" href="#" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-lg-2 col-md-6">
+        <h5>Quick Links</h5>
+        <a href="{{ url_for('main.index') }}">Home</a>
+        <a href="{{ url_for('main.shop') }}">Shop</a>
+        <a href="{{ url_for('main.categories') }}">Categories</a>
+        <a href="{{ url_for('main.about') }}">About Us</a>
+        <a href="{{ url_for('main.contact') }}">Contact</a>
+      </div>
+
+      <!-- Categories -->
+      <div class="col-lg-3 col-md-6">
+        <h5>Categories</h5>
+        <a href="{{ url_for('main.shop', category=1) }}">Fertilizers</a>
+        <a href="{{ url_for('main.shop', category=2) }}">Pesticides</a>
+        <a href="{{ url_for('main.shop', category=3) }}">Seeds</a>
+        <a href="{{ url_for('main.shop', category=4) }}">Farming Tools</a>
+        <a href="{{ url_for('main.shop', category=5) }}">Safety Wearables</a>
+        <a href="{{ url_for('main.shop', category=6) }}">Electronic Devices</a>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-lg-3 col-md-6">
+        <h5>Contact Info</h5>
+        <p style="opacity:0.8;font-size:0.9rem;">
+          <i class="bi bi-geo-alt me-2 text-warning"></i>123 Farm Road, Green Valley
+        </p>
+        <p style="opacity:0.8;font-size:0.9rem;">
+          <i class="bi bi-telephone me-2 text-warning"></i>+20 100 123 4567
+        </p>
+        <p style="opacity:0.8;font-size:0.9rem;">
+          <i class="bi bi-envelope me-2 text-warning"></i>info@agrismart.com
+        </p>
+        <p style="opacity:0.8;font-size:0.9rem;">
+          <i class="bi bi-clock me-2 text-warning"></i>Mon–Sat: 9AM – 6PM
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <p class="mb-0">
+        &copy; {{ 2025 }} <strong>Agri Smart</strong>. All rights reserved.
+        Built with <i class="bi bi-heart-fill text-danger"></i> for farmers everywhere.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Custom JS -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

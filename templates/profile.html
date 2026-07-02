@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-person-circle me-2"></i>My Profile</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+        <li class="breadcrumb-item active">Profile</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container pb-5">
+  <div class="row g-4">
+
+    <!-- ===================================================================
+         PROFILE SIDEBAR
+         =================================================================== -->
+    <div class="col-lg-3">
+      <div class="bg-white rounded-xl shadow-green p-4 text-center">
+        <!-- Avatar -->
+        <div class="profile-avatar mx-auto mb-3">
+          {{ current_user.username[0].upper() }}
+        </div>
+        <h5 class="fw-700 mb-0">{{ current_user.username }}</h5>
+        <p class="text-muted small mb-2">{{ current_user.email }}</p>
+        <span class="badge {{ 'bg-warning text-dark' if current_user.is_admin() else 'bg-success' }}">
+          <i class="bi bi-{{ 'shield-fill' if current_user.is_admin() else 'person-check-fill' }} me-1"></i>
+          {{ current_user.role.title() }}
+        </span>
+        <hr />
+        <div class="d-grid gap-2">
+          <a href="{{ url_for('main.my_orders') }}" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-bag-check me-2"></i>My Orders
+          </a>
+          {% if current_user.is_admin() %}
+          <a href="{{ url_for('main.admin_dashboard') }}" class="btn btn-outline-success btn-sm">
+            <i class="bi bi-speedometer2 me-2"></i>Admin Panel
+          </a>
+          {% endif %}
+          <a href="{{ url_for('main.logout') }}" class="btn btn-outline-danger btn-sm">
+            <i class="bi bi-box-arrow-right me-2"></i>Logout
+          </a>
+        </div>
+        <div class="mt-3 text-muted small">
+          <i class="bi bi-calendar me-1"></i>
+          Joined {{ current_user.created_at.strftime('%B %Y') }}
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         EDIT PROFILE FORM
+         =================================================================== -->
+    <div class="col-lg-9">
+      <div class="bg-white rounded-xl shadow-green p-4">
+        <h5 class="fw-700 mb-4">
+          <i class="bi bi-pencil-square me-2 text-success"></i>Edit Profile
+        </h5>
+
+        <form action="{{ url_for('main.profile') }}" method="POST" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="username" class="form-label fw-600">Username</label>
+              <input type="text" class="form-control" id="username" name="username"
+                     value="{{ current_user.username }}" required />
+            </div>
+            <div class="col-md-6">
+              <label for="email" class="form-label fw-600">Email Address</label>
+              <input type="email" class="form-control" id="email" name="email"
+                     value="{{ current_user.email }}" required />
+            </div>
+            <div class="col-md-6">
+              <label for="phone" class="form-label fw-600">Phone Number</label>
+              <input type="tel" class="form-control" id="phone" name="phone"
+                     value="{{ current_user.phone or '' }}"
+                     placeholder="+20 100 000 0000" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-600">Role</label>
+              <input type="text" class="form-control" value="{{ current_user.role.title() }}" disabled />
+            </div>
+            <div class="col-12">
+              <label for="address" class="form-label fw-600">Default Address</label>
+              <textarea class="form-control" id="address" name="address" rows="2"
+                        placeholder="Your default delivery address">{{ current_user.address or '' }}</textarea>
+            </div>
+          </div>
+
+          <hr class="my-4" />
+
+          <!-- Change Password -->
+          <h6 class="fw-700 mb-3">
+            <i class="bi bi-lock me-2 text-success"></i>Change Password
+            <small class="text-muted fw-400">(leave blank to keep current)</small>
+          </h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="new_password" class="form-label fw-600">New Password</label>
+              <input type="password" class="form-control" id="new_password" name="new_password"
+                     placeholder="Min. 6 characters" autocomplete="new-password" />
+            </div>
+            <div class="col-md-6">
+              <label for="confirm_password" class="form-label fw-600">Confirm New Password</label>
+              <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                     placeholder="Repeat new password" autocomplete="new-password" />
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <button type="submit" class="btn btn-primary btn-lg px-5">
+              <i class="bi bi-save me-2"></i>Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

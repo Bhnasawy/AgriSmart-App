@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed!{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="bg-white rounded-xl shadow-green p-5 text-center">
+
+        <!-- Success Icon -->
+        <div class="success-icon mb-3">
+          <i class="bi bi-check-lg text-success" style="font-size:3rem;"></i>
+        </div>
+
+        <h1 class="fw-800 text-success mb-2">Order Confirmed! ðŸŽ‰</h1>
+        <p class="text-muted mb-1">Thank you for shopping with <strong>Agri Smart</strong>.</p>
+        <p class="text-muted">Your order has been received and is being processed.</p>
+
+        <!-- Order ID Badge -->
+        <div class="my-4 py-3 px-4 rounded-xl d-inline-block"
+             style="background:var(--primary-pale);border:2px dashed var(--primary);">
+          <div class="text-muted small mb-1">Order ID</div>
+          <div class="fw-800 text-success" style="font-size:1.8rem;">#{{ '%04d'|format(order.id) }}</div>
+          <div class="text-muted small mt-1">
+            Placed on {{ order.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+          </div>
+        </div>
+
+        <!-- Order Details Table -->
+        <div class="text-start mb-4">
+          <h5 class="fw-700 mb-3 border-bottom pb-2">
+            <i class="bi bi-info-circle me-2 text-success"></i>Order Details
+          </h5>
+          <div class="row g-2">
+            <div class="col-6">
+              <div class="small text-muted">Customer Name</div>
+              <div class="fw-600">{{ order.full_name }}</div>
+            </div>
+            <div class="col-6">
+              <div class="small text-muted">Email</div>
+              <div class="fw-600">{{ order.email }}</div>
+            </div>
+            <div class="col-6">
+              <div class="small text-muted">Phone</div>
+              <div class="fw-600">{{ order.phone }}</div>
+            </div>
+            <div class="col-6">
+              <div class="small text-muted">Payment Method</div>
+              <div class="fw-600">{{ order.payment_method }}</div>
+            </div>
+            <div class="col-12">
+              <div class="small text-muted">Delivery Address</div>
+              <div class="fw-600">{{ order.address }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ordered Items -->
+        <div class="text-start mb-4">
+          <h5 class="fw-700 mb-3 border-bottom pb-2">
+            <i class="bi bi-bag me-2 text-success"></i>Items Ordered
+          </h5>
+          {% for item in order.items %}
+          <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+            <div>
+              <div class="fw-600">{{ item.product.name }}</div>
+              <div class="small text-muted">Qty: {{ item.quantity }} Ã— {{ "%.2f"|format(item.price_at_purchase) }} EGP</div>
+            </div>
+            <div class="fw-700 text-success">{{ "%.2f"|format(item.subtotal) }} EGP</div>
+          </div>
+          {% endfor %}
+          <div class="d-flex justify-content-between pt-3">
+            <strong class="fs-5">Total Paid</strong>
+            <strong class="fs-5 text-success">{{ "%.2f"|format(order.total_price) }} EGP</strong>
+          </div>
+        </div>
+
+        <!-- Status Badge -->
+        <div class="mb-4 p-3 rounded-xl" style="background:var(--primary-pale);">
+          <div class="text-muted small mb-1">Current Status</div>
+          <span class="status-badge status-{{ order.status.lower() }}">
+            <i class="bi bi-clock me-1"></i>{{ order.status }}
+          </span>
+          <p class="text-muted small mt-2 mb-0">
+            We'll notify you as your order progresses through the stages.
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+          <a href="{{ url_for('main.my_orders') }}" class="btn btn-primary btn-lg">
+            <i class="bi bi-bag-check me-2"></i>My Orders
+          </a>
+          <a href="{{ url_for('main.shop') }}" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-shop me-2"></i>Continue Shopping
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block title %}My Cart{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-cart3 me-2"></i>Shopping Cart</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+        <li class="breadcrumb-item active">Cart</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container pb-5">
+  {% if cart_items %}
+  <div class="row g-4">
+
+    <!-- ===================================================================
+         CART TABLE
+         =================================================================== -->
+    <div class="col-lg-8">
+      <div class="bg-white rounded-xl shadow-green p-0 overflow-hidden">
+        <div class="p-3 border-bottom" style="background:var(--primary-pale);">
+          <h5 class="mb-0 text-success fw-700">
+            <i class="bi bi-bag me-2"></i>{{ cart_items|length }} Item{{ 's' if cart_items|length != 1 else '' }} in Cart
+          </h5>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table cart-table mb-0">
+            <thead>
+              <tr>
+                <th scope="col">Product</th>
+                <th scope="col" class="text-center">Unit Price</th>
+                <th scope="col" class="text-center">Quantity</th>
+                <th scope="col" class="text-center">Subtotal</th>
+                <th scope="col" class="text-center">Remove</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in cart_items %}
+              <tr>
+                <!-- Product Info -->
+                <td>
+                  <div class="d-flex align-items-center gap-3">
+                    <img src="{{ item.product.image_url or url_for('static', filename='images/placeholder.svg') }}"
+                         alt="{{ item.product.name }}"
+                         style="width:64px;height:64px;object-fit:cover;border-radius:8px;"
+                         data-product-img />
+                    <div>
+                      <a href="{{ url_for('main.product_detail', product_id=item.product.id) }}"
+                         class="text-decoration-none fw-600 text-dark">
+                        {{ item.product.name }}
+                      </a>
+                      <div class="small text-muted">{{ item.product.category.name }}</div>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Unit Price -->
+                <td class="text-center fw-600">
+                  {{ "%.2f"|format(item.product.price) }} EGP
+                </td>
+
+                <!-- Quantity -->
+                <td class="text-center">
+                  <form action="{{ url_for('main.update_cart', item_id=item.id) }}" method="POST"
+                        class="d-flex justify-content-center align-items-center gap-1">
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                            data-qty-btn="dec" data-target="qty_{{ item.id }}">
+                      <i class="bi bi-dash"></i>
+                    </button>
+                    <input type="number" id="qty_{{ item.id }}" name="quantity"
+                           value="{{ item.quantity }}" min="1" max="{{ item.product.stock_quantity }}"
+                           class="quantity-input cart-qty-input form-control form-control-sm"
+                           style="width:60px;" />
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                            data-qty-btn="inc" data-target="qty_{{ item.id }}">
+                      <i class="bi bi-plus"></i>
+                    </button>
+                  </form>
+                </td>
+
+                <!-- Subtotal -->
+                <td class="text-center fw-700 text-success">
+                  {{ "%.2f"|format(item.product.price * item.quantity) }} EGP
+                </td>
+
+                <!-- Remove -->
+                <td class="text-center">
+                  <form action="{{ url_for('main.remove_from_cart', item_id=item.id) }}" method="POST">
+                    <button type="submit" class="btn btn-outline-danger btn-sm"
+                            onclick="return confirmDelete('Remove this item from cart?')">
+                      <i class="bi bi-trash3"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="d-flex justify-content-between mt-3 flex-wrap gap-2">
+        <a href="{{ url_for('main.shop') }}" class="btn btn-outline-primary">
+          <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+        </a>
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         ORDER SUMMARY
+         =================================================================== -->
+    <div class="col-lg-4">
+      <div class="order-summary-card">
+        <h5 class="fw-700 mb-3"><i class="bi bi-receipt me-2 text-success"></i>Order Summary</h5>
+
+        {% for item in cart_items %}
+        <div class="summary-row">
+          <span class="text-muted small">{{ item.product.name[:28] }}{% if item.product.name|length > 28 %}â€¦{% endif %} Ã—{{ item.quantity }}</span>
+          <span class="small fw-600">{{ "%.2f"|format(item.product.price * item.quantity) }} EGP</span>
+        </div>
+        {% endfor %}
+
+        <div class="summary-row mt-2">
+          <span class="text-muted">Subtotal</span>
+          <span class="fw-600">{{ "%.2f"|format(total) }} EGP</span>
+        </div>
+        <div class="summary-row">
+          <span class="text-muted">Shipping</span>
+          <span class="fw-600 text-success">Free</span>
+        </div>
+        <div class="summary-row summary-total border-top pt-2 mt-2">
+          <span class="fw-800">Total</span>
+          <span>{{ "%.2f"|format(total) }} EGP</span>
+        </div>
+
+        <a href="{{ url_for('main.checkout') }}" class="btn btn-primary w-100 mt-3 btn-lg">
+          <i class="bi bi-lock me-2"></i>Proceed to Checkout
+        </a>
+
+        <!-- Trust badges -->
+        <div class="mt-3 text-center">
+          <small class="text-muted d-flex justify-content-center gap-3">
+            <span><i class="bi bi-shield-check text-success me-1"></i>Secure</span>
+            <span><i class="bi bi-truck text-success me-1"></i>Fast Delivery</span>
+            <span><i class="bi bi-arrow-return-left text-success me-1"></i>Easy Returns</span>
+          </small>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {% else %}
+  <!-- Empty Cart -->
+  <div class="text-center py-5">
+    <div style="font-size:5rem;color:#ccc;">ðŸ›’</div>
+    <h3 class="mt-3 text-muted">Your Cart is Empty</h3>
+    <p class="text-muted">Looks like you haven't added any products yet.</p>
+    <a href="{{ url_for('main.shop') }}" class="btn btn-primary btn-lg mt-2">
+      <i class="bi bi-shop me-2"></i>Start Shopping
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

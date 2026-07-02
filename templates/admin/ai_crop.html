@@ -1,0 +1,140 @@
+{% extends "admin/base.html" %}
+{% block title %}Crop Recommendations History{% endblock %}
+{% block page_title %}Crop Recommendations{% endblock %}
+{% block breadcrumb %}
+<li class="breadcrumb-item">AI Intelligence</li>
+<li class="breadcrumb-item active">Crop Recommendations</li>
+{% endblock %}
+
+{% block content %}
+{% set crop_images = {
+    "rice": "1",
+    "maize": "2",
+    "chickpea": "3",
+    "kidneybeans": "4",
+    "pigeonpeas": "5",
+    "mothbeans": "6",
+    "mungbean": "7",
+    "blackgram": "8",
+    "lentil": "9",
+    "pomegranate": "10",
+    "banana": "11",
+    "mango": "12",
+    "grapes": "13",
+    "watermelon": "14",
+    "muskmelon": "15",
+    "apple": "16",
+    "orange": "17",
+    "papaya": "18",
+    "coconut": "19",
+    "cotton": "20",
+    "jute": "21",
+    "coffee": "22"
+} %}
+<div class="bg-white rounded-xl p-4 shadow-sm">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="fw-700 mb-0"><i class="bi bi-flower3 text-success me-2"></i>Recommendation History</h5>
+    <a href="{{ url_for('main.admin_ai_crop_export') }}" class="btn btn-outline-success btn-sm">
+      <i class="bi bi-download me-1"></i>Export CSV
+    </a>
+  </div>
+
+  <form method="GET" class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="input-group input-group-sm">
+        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0" name="q" placeholder="Search by crop, IP..." value="{{ search }}">
+      </div>
+    </div>
+    <div class="col-md-3">
+      <select name="crop" class="form-select form-select-sm">
+        <option value="">All Crops</option>
+        {% for c in all_crops %}
+        <option value="{{ c }}" {% if filter_crop == c %}selected{% endif %}>{{ c.title() }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-sm btn-primary w-100">Filter</button>
+    </div>
+    {% if search or filter_crop %}
+    <div class="col-md-2">
+      <a href="{{ url_for('main.admin_ai_crop') }}" class="btn btn-sm btn-outline-secondary w-100">Clear</a>
+    </div>
+    {% endif %}
+  </form>
+
+  <div class="table-responsive">
+    <table class="table admin-table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>User / IP</th>
+          <th>Soil (N/P/K/pH)</th>
+          <th>Env (Temp/Hum/Rain)</th>
+          <th>Recommended Crop</th>
+          <th>Confidence</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rec in recommendations %}
+        <tr>
+          <td class="small">{{ rec.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td>
+            {% if rec.user %}
+            <span class="badge bg-primary">{{ rec.user.username }}</span>
+            {% else %}
+            <span class="badge bg-secondary">Guest</span>
+            <div class="small text-muted mt-1" style="font-size:0.7rem;">IP: {{ rec.ip_address }}</div>
+            {% endif %}
+          </td>
+          <td>
+            <div class="small">
+              <span class="text-danger fw-600">N:</span> {{ rec.nitrogen }} |
+              <span class="text-primary fw-600">P:</span> {{ rec.phosphorus }} |
+              <span class="text-warning fw-600">K:</span> {{ rec.potassium }}<br>
+              <span class="text-secondary fw-600">pH:</span> {{ rec.ph }}
+            </div>
+          </td>
+          <td>
+            <div class="small">
+              <i class="bi bi-thermometer-half text-danger"></i> {{ rec.temperature }}°C<br>
+              <i class="bi bi-moisture text-primary"></i> {{ rec.humidity }}% | 
+              <i class="bi bi-cloud-rain text-info"></i> {{ rec.rainfall }}mm
+            </div>
+          </td>
+          <td class="fw-700 text-success text-capitalize fs-6">
+            {% set crop_key = rec.recommended_crop|lower %}
+            {% set img_name = crop_images.get(crop_key, 'unknown') %}
+            {% if img_name == 'unknown' %}
+               {% set img_src = 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=500&auto=format&fit=crop&q=80' %}
+            {% else %}
+               {% set img_src = '/static/crops/' ~ img_name ~ '.jpg' %}
+            {% endif %}
+            <img src="{{ img_src }}" alt="{{ rec.recommended_crop }}" 
+                 class="rounded-circle me-2" style="width:30px; height:30px; object-fit:cover;"
+                 onerror="this.src='https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=50&q=80'">
+            {{ rec.recommended_crop }}
+          </td>
+          <td>
+            {% if rec.confidence %}
+            <span class="badge bg-success">{{ (rec.confidence * 100)|round(1) }}%</span>
+            {% else %}
+            <span class="text-muted small">N/A</span>
+            {% endif %}
+          </td>
+          <td>
+            <form action="{{ url_for('main.admin_ai_crop_delete', rec_id=rec.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this record?');">
+              <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No recommendation records found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

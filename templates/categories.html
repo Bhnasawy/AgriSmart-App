@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Categories{% endblock %}
+{% block meta_description %}Browse all agricultural product categories at Agri Smart — fertilizers, seeds, tools, pesticides, safety gear, and electronic devices.{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-grid me-2"></i>Product Categories</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+        <li class="breadcrumb-item active">Categories</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container pb-5">
+  <div class="text-center mb-5">
+    <p class="text-muted">Explore our 6 agricultural product categories and find everything your farm needs</p>
+  </div>
+
+  <div class="row g-4">
+    {% for cat in categories %}
+    <div class="col-lg-4 col-md-6">
+      <div class="card border-0 shadow-sm h-100 d-flex flex-column" style="border-radius:14px;overflow:hidden;transition:all 0.3s;">
+        <!-- Header bar -->
+        <div style="background:linear-gradient(135deg,#2e7d32,#4caf50);height:8px;"></div>
+        <div class="card-body p-4 d-flex flex-column">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="category-icon" style="width:60px;height:60px;flex-shrink:0;">
+              <i class="bi {{ cat.icon }}" style="font-size:1.6rem;"></i>
+            </div>
+            <div>
+              <h4 class="fw-800 mb-0">{{ cat.name }}</h4>
+              <span class="text-muted small">{{ cat.products | length }} products available</span>
+            </div>
+          </div>
+          <p class="text-muted small mb-3" style="line-height:1.6;">
+            {{ cat.description or 'Quality ' + cat.name.lower() + ' for your agricultural needs.' }}
+          </p>
+
+          <!-- Product previews -->
+          {% if cat.products %}
+          <div class="d-flex gap-2 mb-3 flex-wrap">
+            {% for product in cat.products[:3] %}
+            <span class="badge bg-light text-muted border" style="font-size:0.75rem;">
+              {{ product.name[:20] }}{% if product.name|length > 20 %}…{% endif %}
+            </span>
+            {% endfor %}
+            {% if cat.products|length > 3 %}
+            <span class="badge bg-success bg-opacity-10 text-success border-0">
+              +{{ cat.products|length - 3 }} more
+            </span>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <a href="{{ url_for('main.shop', category=cat.id) }}"
+             class="btn btn-primary w-100 mt-auto">
+            <i class="bi bi-arrow-right-circle me-1"></i>
+            Browse {{ cat.name }}
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

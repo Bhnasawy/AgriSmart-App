@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block title %}Shop{% endblock %}
+{% block meta_description %}Browse and shop all agricultural products at Agri Smart. Filter by category and search for exactly what your farm needs.{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-shop me-2"></i>Our Shop</h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+        <li class="breadcrumb-item active">Shop</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="container pb-5">
+  <div class="row g-4">
+
+    <!-- ===================================================================
+         SIDEBAR FILTERS
+         =================================================================== -->
+    <div class="col-lg-3">
+      <div class="filter-card">
+        <!-- Collapsible Header -->
+        <div class="d-flex justify-content-between align-items-center mb-3" 
+             data-bs-toggle="collapse" data-bs-target="#filterCollapse" 
+             style="cursor: pointer;" aria-expanded="true">
+          <h6 class="mb-0 fw-700 text-primary-dark"><i class="bi bi-funnel me-2"></i>Search & Filter</h6>
+          <i class="bi bi-chevron-down filter-toggle-icon"></i>
+        </div>
+
+        <div class="collapse show" id="filterCollapse">
+          <!-- Search -->
+          <form action="{{ url_for('main.shop') }}" method="GET" id="searchForm">
+            <div class="mb-3">
+              <label class="form-label small fw-600">Search Products</label>
+              <div class="input-group">
+                <input type="text" class="form-control" name="q"
+                       placeholder="Search..." value="{{ search_query }}" id="searchInput"/>
+                <button class="btn btn-primary" type="submit">
+                  <i class="bi bi-search"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="mb-3">
+              <label class="form-label small fw-600">Category</label>
+              <select class="form-select" name="category" id="categoryFilter">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                <option value="{{ cat.id }}"
+                        {% if selected_category == cat.id %}selected{% endif %}>
+                  {{ cat.name }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="bi bi-funnel me-1"></i>Apply Filters
+            </button>
+            <a href="{{ url_for('main.shop') }}" class="btn btn-outline-secondary w-100 mt-2">
+              <i class="bi bi-x me-1"></i>Clear Filters
+            </a>
+          </form>
+
+          <hr class="my-3">
+
+          <!-- Category Quick Links -->
+          <h6>Browse by Category</h6>
+          <div class="d-flex flex-column gap-1 mt-2">
+            <a href="{{ url_for('main.shop') }}"
+               class="cat-filter-link text-decoration-none py-1 px-2 rounded small
+                      {% if not selected_category %}fw-bold text-success{% else %}text-muted{% endif %}">
+              <i class="bi bi-grid me-2"></i>All Products
+            </a>
+            {% for cat in categories %}
+            <a href="{{ url_for('main.shop', category=cat.id) }}"
+               data-cat-id="{{ cat.id }}"
+               class="cat-filter-link text-decoration-none py-1 px-2 rounded small
+                      {% if selected_category == cat.id %}fw-bold text-success bg-pale-green{% else %}text-muted{% endif %}
+                      hover-lift">
+              <i class="bi {{ cat.icon }} me-2"></i>{{ cat.name }}
+              <span class="badge bg-light text-muted float-end">{{ cat.products|length }}</span>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         PRODUCT GRID
+         =================================================================== -->
+    <div class="col-lg-9">
+      <!-- Results Header -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <p class="mb-0 text-muted small">
+          Showing <strong>{{ products.total }}</strong> product{{ 's' if products.total != 1 else '' }}
+          {% if search_query %}for "<strong>{{ search_query }}</strong>"{% endif %}
+        </p>
+        {% if search_query or selected_category %}
+        <a href="{{ url_for('main.shop') }}" class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-x me-1"></i>Clear
+        </a>
+        {% endif %}
+      </div>
+
+      {% if products.items %}
+      <div class="row g-4">
+        {% for product in products.items %}
+        <div class="col-lg-4 col-md-6">
+          {% include '_product_card.html' %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Pagination -->
+      {% if products.pages > 1 %}
+      <nav class="mt-5" aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          {% if products.has_prev %}
+          <li class="page-item">
+            <a class="page-link" href="{{ url_for('main.shop', page=products.prev_num, q=search_query, category=selected_category) }}">
+              <i class="bi bi-chevron-left"></i> Prev
+            </a>
+          </li>
+          {% endif %}
+
+          {% for page_num in products.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+            {% if page_num %}
+            <li class="page-item {% if page_num == products.page %}active{% endif %}">
+              <a class="page-link" href="{{ url_for('main.shop', page=page_num, q=search_query, category=selected_category) }}">
+                {{ page_num }}
+              </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+          {% endfor %}
+
+          {% if products.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="{{ url_for('main.shop', page=products.next_num, q=search_query, category=selected_category) }}">
+              Next <i class="bi bi-chevron-right"></i>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+
+      {% else %}
+      <!-- Empty State -->
+      <div class="text-center py-5">
+        <i class="bi bi-search" style="font-size:4rem;color:#ccc;"></i>
+        <h4 class="mt-3 text-muted">No Products Found</h4>
+        <p class="text-muted">Try adjusting your search or filter criteria.</p>
+        <a href="{{ url_for('main.shop') }}" class="btn btn-primary mt-2">
+          <i class="bi bi-arrow-left me-1"></i>View All Products
+        </a>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
