@@ -23,6 +23,12 @@ class Config:
     # Disable modification tracking to save resources
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # Connection pool options to prevent SSL connection closed unexpectedly errors
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True,
+        "pool_recycle": 280,
+    }
+
     # Upload folder for product images and AI uploads
     UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
 
