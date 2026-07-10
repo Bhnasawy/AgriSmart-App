@@ -120,6 +120,13 @@ def create_app():
         except Exception:
             db.session.rollback()
         # ----------------------------------------------
+        
+        # Populate missing Arabic translations for existing rows
+        try:
+            from db_migration import run_translation_migrations
+            run_translation_migrations()
+        except ImportError:
+            print("Warning: db_migration.py not found.")
 
         _seed_database()
 
