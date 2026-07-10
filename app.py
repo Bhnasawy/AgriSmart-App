@@ -97,6 +97,30 @@ def create_app():
     # -----------------------------------------------------------------------
     with app.app_context():
         db.create_all()
+        
+        # --- Automatic DB Migration for new columns ---
+        try:
+            db.session.execute(db.text("ALTER TABLE categories ADD COLUMN name_ar VARCHAR(100)"))
+            db.session.commit()
+            print("Added name_ar to categories")
+        except Exception:
+            db.session.rollback()
+
+        try:
+            db.session.execute(db.text("ALTER TABLE products ADD COLUMN name_ar VARCHAR(200)"))
+            db.session.commit()
+            print("Added name_ar to products")
+        except Exception:
+            db.session.rollback()
+
+        try:
+            db.session.execute(db.text("ALTER TABLE products ADD COLUMN description_ar TEXT"))
+            db.session.commit()
+            print("Added description_ar to products")
+        except Exception:
+            db.session.rollback()
+        # ----------------------------------------------
+
         _seed_database()
 
     return app
