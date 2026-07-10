@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
-{% block meta_description %}Agri Smart - Shop fertilizers, seeds, pesticides, farming tools and more online. Quality agricultural products delivered to your farm.{% endblock %}
+{% block meta_description %}Agri Smart - Shop fertilizers, seeds, pesticides, farming tools and more online. Quality
+agricultural products delivered to your farm.{% endblock %}
 
 {% block content %}
 
@@ -12,44 +13,46 @@
     <div class="row align-items-center g-5">
       <div class="col-lg-6">
         <p class="mb-2" style="color:#ffb300;font-weight:600;letter-spacing:1px;font-size:0.9rem;">
-          🌱 WELCOME TO AGRI SMART
+          <span data-i18n="hero-welcome">🌱 WELCOME TO AGRI SMART</span>
         </p>
         <h1 class="hero-title">
-          Grow Smarter,<br><span>Harvest Better</span>
+          <span data-i18n="hero-title">Grow Smarter,</span><br><span data-i18n="hero-title-span">Harvest Better</span>
         </h1>
-        <p class="hero-subtitle">
-          Your one-stop online store for premium agricultural supplies.
-          From certified seeds to smart farming technology — everything your farm needs.
+        <p class="hero-subtitle" data-i18n="hero-sub">
+          Empowering your farm with a curated selection of premium
+          agricultural supplies, from certified seeds to advanced farming technology.
+          We are your dedicated one-stop smart-farming partner.
         </p>
-        <div class="d-flex flex-wrap gap-3">
-          <a href="{{ url_for('main.shop') }}" class="btn btn-accent btn-lg px-4">
-            <i class="bi bi-cart3 me-2"></i>Shop Now
+        <div class="hero-btn-group">
+          <a href="{{ url_for('main.shop') }}" class="btn btn-accent btn-lg"
+             data-i18n="hero-btn-shop">
+            🛒 Shop Now
           </a>
-          <a href="{{ url_for('main.categories') }}" class="btn btn-lg px-4"
-             style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.4);">
-            <i class="bi bi-grid me-2"></i>Browse Categories
+          <a href="{{ url_for('main.categories') }}" class="btn btn-lg"
+            style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.4);"
+            data-i18n="hero-btn-browse">
+            ⊞ Browse Categories
           </a>
         </div>
         <div class="hero-stats">
           <div class="hero-stat">
-            <div class="number">500+</div>
-            <div class="label">Products</div>
+            <div class="number" data-i18n="hero-stat-1-num">Instant</div>
+            <div class="label" data-i18n="hero-stat-1">Disease Diagnosis</div>
           </div>
           <div class="hero-stat">
-            <div class="number">10K+</div>
-            <div class="label">Happy Farmers</div>
+            <div class="number">96%+</div>
+            <div class="label" data-i18n="hero-stat-2">Detection Success Rate</div>
           </div>
           <div class="hero-stat">
-            <div class="number">6</div>
-            <div class="label">Categories</div>
+            <div class="number" data-i18n="hero-stat-3-num">Optimized</div>
+            <div class="label" data-i18n="hero-stat-3">Resource Usage</div>
           </div>
         </div>
       </div>
       <div class="col-lg-6">
         <div class="hero-img-wrapper">
           <img src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?w=700&q=80"
-               alt="Modern Farm Agriculture"
-               style="height:420px;width:100%;object-fit:cover;" />
+            alt="Modern Farm Agriculture" style="height:420px;width:100%;object-fit:cover;" />
         </div>
       </div>
     </div>
@@ -62,8 +65,9 @@
 <section class="py-5 bg-pale-green">
   <div class="container">
     <div class="text-center mb-5">
-      <h2 class="section-title text-center">Shop by Category</h2>
-      <p class="text-muted mt-2">Explore our wide range of agricultural product categories</p>
+      <h2 class="section-title text-center" data-i18n="sec-category">Shop by Category</h2>
+      <p class="text-muted mt-2" data-i18n="sec-category-sub">Explore our wide range of agricultural product categories
+      </p>
     </div>
     <div class="row g-4">
       {% for cat in categories %}
@@ -73,7 +77,7 @@
             <div class="category-icon">
               <i class="bi {{ cat.icon }}"></i>
             </div>
-            <h5>{{ cat.name }}</h5>
+            <h5>{{ cat.name_ar if lang == 'ar' and cat.name_ar else cat.name }}</h5>
             <p>{{ cat.products | length }} Products</p>
           </div>
         </a>
@@ -115,8 +119,9 @@
 <section class="py-5 bg-pale-green">
   <div class="container">
     <div class="text-center mb-5">
-      <h2 class="section-title text-center">Why Choose Agri Smart?</h2>
-      <p class="text-muted mt-2">We're committed to supporting every farmer with quality and reliability</p>
+      <h2 class="section-title text-center" data-i18n="sec-why">Why Choose Agri Smart?</h2>
+      <p class="text-muted mt-2" data-i18n="sec-why-sub">We're committed to supporting every farmer with quality and
+        reliability</p>
     </div>
     <div class="row g-4">
       <div class="col-lg-3 col-md-6">
@@ -124,8 +129,9 @@
           <div class="feature-icon">
             <i class="bi bi-patch-check-fill"></i>
           </div>
-          <h5 class="fw-700 mb-2">Certified Quality</h5>
-          <p class="text-muted small">All our products are quality-tested and certified by agricultural authorities for safety and effectiveness.</p>
+          <h5 class="fw-700 mb-2" data-i18n="feat-quality">Certified Quality</h5>
+          <p class="text-muted small">All our products are quality-tested and certified by agricultural authorities for
+            safety and effectiveness.</p>
         </div>
       </div>
       <div class="col-lg-3 col-md-6">
@@ -133,8 +139,9 @@
           <div class="feature-icon">
             <i class="bi bi-truck-front-fill"></i>
           </div>
-          <h5 class="fw-700 mb-2">Fast Delivery</h5>
-          <p class="text-muted small">We deliver directly to your farm or doorstep quickly and reliably across all regions.</p>
+          <h5 class="fw-700 mb-2" data-i18n="feat-delivery">Fast Delivery</h5>
+          <p class="text-muted small">We deliver directly to your farm or doorstep quickly and reliably across all
+            regions.</p>
         </div>
       </div>
       <div class="col-lg-3 col-md-6">
@@ -142,8 +149,9 @@
           <div class="feature-icon">
             <i class="bi bi-currency-dollar"></i>
           </div>
-          <h5 class="fw-700 mb-2">Best Prices</h5>
-          <p class="text-muted small">Competitive prices with seasonal discounts and bulk order deals to save more on every purchase.</p>
+          <h5 class="fw-700 mb-2" data-i18n="feat-price">Best Prices</h5>
+          <p class="text-muted small">Competitive prices with seasonal discounts and bulk order deals to save more on
+            every purchase.</p>
         </div>
       </div>
       <div class="col-lg-3 col-md-6">
@@ -151,8 +159,9 @@
           <div class="feature-icon">
             <i class="bi bi-headset"></i>
           </div>
-          <h5 class="fw-700 mb-2">Expert Support</h5>
-          <p class="text-muted small">Our agricultural experts are available 6 days a week to help you choose the right products.</p>
+          <h5 class="fw-700 mb-2" data-i18n="feat-support">Expert Support</h5>
+          <p class="text-muted small">Our agricultural experts are available 6 days a week to help you choose the right
+            products.</p>
         </div>
       </div>
     </div>
@@ -192,29 +201,33 @@
   <div class="container">
     <div class="text-center mb-5">
       <span class="ai-section-badge"><i class="bi bi-cpu-fill me-2"></i>Powered by AI</span>
-      <h2 class="section-title text-center mt-3">AI Smart Farming</h2>
-      <p class="text-muted mt-2">Leverage the power of machine learning to make smarter farming decisions</p>
+      <h2 class="section-title text-center mt-3" data-i18n="sec-ai">AI Smart Farming</h2>
+      <p class="text-muted mt-2" data-i18n="sec-ai-sub">Leverage the power of machine learning to make smarter farming
+        decisions</p>
     </div>
     <div class="row g-4 justify-content-center">
       <!-- Card 1: Crop Recommendation -->
       <div class="col-lg-5 col-md-6">
-        <div class="ai-feature-card">
+        <div class="ai-feature-card d-flex flex-column">
           <div class="ai-card-icon ai-icon-green">
             <i class="bi bi-flower3"></i>
           </div>
           <div class="ai-card-badge">Random Forest ML</div>
-          <h4 class="ai-card-title">Crop Recommendation</h4>
-          <p class="ai-card-desc">
-            Enter your soil's nitrogen, phosphorus, potassium levels, temperature, humidity, pH, 
-            and rainfall data. Our AI model recommends the most suitable crop for your conditions 
+          <h4 class="ai-card-title" data-i18n="ai-crop-title">Crop Recommendation</h4>
+          <p class="ai-card-desc" data-i18n="ai-crop-desc">
+            Enter your soil's nitrogen, phosphorus, potassium levels, temperature, humidity, pH,
+            and rainfall data. Our AI model recommends the most suitable crop for your conditions
             with high accuracy.
           </p>
           <ul class="ai-card-features">
-            <li><i class="bi bi-check-circle-fill text-success me-2"></i>7 environmental parameters</li>
-            <li><i class="bi bi-check-circle-fill text-success me-2"></i>22 crop varieties supported</li>
-            <li><i class="bi bi-check-circle-fill text-success me-2"></i>Weather autofill integration</li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i><span data-i18n="ai-crop-feat1">7 environmental
+                parameters</span></li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i><span data-i18n="ai-crop-feat2">22 crop
+                varieties supported</span></li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i><span data-i18n="ai-crop-feat3">Weather
+                autofill integration</span></li>
           </ul>
-          <a href="{{ url_for('main.ai_crop') }}" class="btn btn-primary ai-card-btn mt-auto">
+          <a href="{{ url_for('main.ai_crop') }}" class="btn btn-primary ai-card-btn mt-auto w-100">
             <i class="bi bi-play-circle-fill me-2"></i>Open Predictor
           </a>
         </div>
@@ -226,19 +239,22 @@
             <i class="bi bi-camera-fill"></i>
           </div>
           <div class="ai-card-badge ai-badge-red">EfficientNetB3 Deep Learning</div>
-          <h4 class="ai-card-title">Tomato Disease Diagnosis</h4>
-          <p class="ai-card-desc">
+          <h4 class="ai-card-title" data-i18n="ai-tomato-title">Tomato Disease Diagnosis</h4>
+          <p class="ai-card-desc" data-i18n="ai-tom-desc">
             Upload a photo of your tomato leaf and our deep learning model will instantly diagnose
             any disease, showing confidence score, recommended treatment, and suggested pesticides.
           </p>
           <ul class="ai-card-features">
-            <li><i class="bi bi-check-circle-fill text-success me-2"></i>10 disease classes detected</li>
-            <li><i class="bi bi-check-circle-fill text-success me-2"></i>Confidence score provided</li>
-            <li><i class="bi bi-check-circle-fill text-success me-2"></i>Treatment & pesticide advice</li>
-            
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i><span data-i18n="ai-tom-feat1">10 disease
+                classes detected</span></li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i><span data-i18n="ai-tom-feat2">Confidence score
+                provided</span></li>
+            <li><i class="bi bi-check-circle-fill text-success me-2"></i><span data-i18n="ai-tom-feat3">Treatment &amp;
+                pesticide advice</span></li>
+
           </ul>
-          <a href="{{ url_for('main.ai_tomato') }}" class="btn ai-card-btn ai-btn-red mt-auto">
-            <i class="bi bi-search-heart-fill me-2 "></i>Diagnose Tomato Leaf
+          <a href="{{ url_for('main.ai_tomato') }}" class="btn ai-card-btn ai-btn-red mt-auto w-100">
+            <i class="bi bi-search-heart-fill me-2"></i>Diagnose Tomato Leaf
           </a>
         </div>
       </div>
@@ -251,19 +267,21 @@
      ========================================================================= -->
 <section class="py-5" style="background:linear-gradient(135deg,#1b5e20,#2e7d32);">
   <div class="container text-center text-white">
-    <h2 class="fw-800 mb-3" style="font-size:2.2rem;">Ready to Transform Your Farm?</h2>
-    <p class="mb-4 opacity-75" style="font-size:1.1rem;">
+    <h2 class="fw-800 mb-3" style="font-size:2.2rem;" data-i18n="cta-title">Ready to Transform Your Farm?</h2>
+    <p class="mb-4 opacity-75" style="font-size:1.1rem;" data-i18n="cta-sub">
       Join thousands of farmers who trust Agri Smart for their agricultural needs.
     </p>
-    <a href="{{ url_for('main.register') }}" class="btn btn-accent btn-lg px-5 me-3">
-      Get Started Free
-    </a>
-    <a href="{{ url_for('main.shop') }}" class="btn btn-lg px-5"
-       style="border:2px solid rgba(255,255,255,0.5);color:#fff;">
-      Browse Products
-    </a>
+    <div class="d-flex flex-wrap justify-content-center gap-3 mt-3">
+      <a href="{{ url_for('main.register') }}" class="btn btn-accent btn-lg"
+         style="min-width:200px;flex:1;max-width:230px; border: 2px solid transparent; display: flex; align-items: center; justify-content: center;">
+        Get Started Free
+      </a>
+      <a href="{{ url_for('main.shop') }}" class="btn btn-lg"
+         style="min-width:200px;flex:1;max-width:230px;border:2px solid rgba(255,255,255,0.5);color:#fff; display: flex; align-items: center; justify-content: center;">
+        Browse Products
+      </a>
+    </div>
   </div>
 </section>
 
 {% endblock %}
-

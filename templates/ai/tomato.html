@@ -5,9 +5,9 @@
 <div class="container py-5 mt-4 ai-page">
   <div class="text-center mb-5">
     <span class="ai-section-badge ai-badge-red mb-2"><i class="bi bi-camera-fill me-2"></i>AI Vision</span>
-    <h1 class="fw-800">Tomato Disease Diagnosis</h1>
-    <p class="text-muted mx-auto" style="max-width:600px;">
-      Upload a photo of your tomato leaf. Our deep learning model will analyze the image, 
+    <h1 class="fw-800" data-i18n="tomato-page-title">Tomato Disease Diagnosis</h1>
+    <p class="text-muted mx-auto" style="max-width:600px;" data-i18n="tomato-page-sub">
+      Upload a photo of your tomato leaf. Our deep learning model will analyze the image,
       detect potential diseases, and recommend effective treatments instantly.
     </p>
   </div>
@@ -21,9 +21,9 @@
           <div class="upload-dropzone" id="dropzone">
             <div id="upload-prompt" class="text-center">
               <i class="bi bi-cloud-arrow-up text-danger mb-3" style="font-size:3rem;"></i>
-              <h5 class="fw-700">Drag & Drop Image Here</h5>
-              <p class="text-muted small mb-3">or click to browse from your device</p>
-              <div class="btn btn-outline-danger btn-sm rounded-pill px-4">Select Image</div>
+              <h5 class="fw-700" data-i18n="tomato-drop-title">Drag & Drop Image Here</h5>
+              <p class="text-muted small mb-3" data-i18n="tomato-drop-sub">or click to browse from your device</p>
+              <div class="btn btn-outline-danger btn-sm rounded-pill px-4" data-i18n="tomato-select-btn">Select Image</div>
             </div>
             <input type="file" id="file-input" name="file" accept="image/png, image/jpeg, image/jpg, image/webp" class="d-none">
             
@@ -50,8 +50,8 @@
           <div class="icon-circle mb-3">
             <i class="bi bi-clipboard-pulse text-muted"></i>
           </div>
-          <h5 class="text-muted fw-600">No Result Yet</h5>
-          <p class="small text-muted mb-0">Upload an image to see the diagnosis</p>
+          <h5 class="text-muted fw-600" data-i18n="tomato-no-result">No Result Yet</h5>
+          <p class="small text-muted mb-0" data-i18n="tomato-upload-hint">Upload an image to see the diagnosis</p>
         </div>
 
         <!-- Loading State -->
@@ -59,8 +59,8 @@
           <div class="spinner-grow text-danger mb-3" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
-          <h5 class="fw-700">Analyzing Image...</h5>
-          <p class="small text-muted mb-0">Running EfficientNetB3 deep learning model</p>
+          <h5 class="fw-700" data-i18n="tomato-analyzing">Analyzing Image...</h5>
+          <p class="small text-muted mb-0" data-i18n="tomato-model-running">Running EfficientNetB3 deep learning model</p>
         </div>
 
         <!-- Error State -->
@@ -88,12 +88,12 @@
           </div>
 
           <div class="treatment-box p-3 rounded mb-3" style="background:#fff5f5; border:1px solid #ffe3e3;">
-            <h6 class="fw-700 text-danger mb-2"><i class="bi bi-bandaid me-2"></i>Recommended Treatment</h6>
+            <h6 class="fw-700 text-danger mb-2"><i class="bi bi-bandaid me-2"></i><span data-i18n="tomato-treatment">Recommended Treatment</span></h6>
             <p id="treatment-text" class="small mb-0 text-dark">Remove infected leaves and improve air circulation.</p>
           </div>
 
           <div class="treatment-box p-3 rounded mb-4" style="background:#f8f9fa; border:1px solid #e9ecef;">
-            <h6 class="fw-700 text-dark mb-2"><i class="bi bi-shield-check me-2"></i>Suggested Pesticide</h6>
+            <h6 class="fw-700 text-dark mb-2"><i class="bi bi-shield-check me-2"></i><span data-i18n="tomato-pesticide">Suggested Pesticide</span></h6>
             <p id="pesticide-text" class="small mb-0 text-dark">Mancozeb, Chlorothalonil.</p>
           </div>
 
@@ -122,7 +122,7 @@
           </div>
 
           <button id="btn-reset" class="btn btn-outline-secondary w-100 rounded-pill mt-3">
-            <i class="bi bi-arrow-counterclockwise me-1"></i> Diagnose Another Leaf
+            <i class="bi bi-arrow-counterclockwise me-1"></i> <span data-i18n="tomato-diagnose-another">Diagnose Another Leaf</span>
           </button>
         </div>
         

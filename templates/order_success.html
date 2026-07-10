@@ -63,8 +63,8 @@
           {% for item in order.items %}
           <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
             <div>
-              <div class="fw-600">{{ item.product.name }}</div>
-              <div class="small text-muted">Qty: {{ item.quantity }} Ã— {{ "%.2f"|format(item.price_at_purchase) }} EGP</div>
+              <div class="fw-600">{{ item.product.name_ar if lang == 'ar' and item.product.name_ar else item.product.name }}</div>
+              <div class="small text-muted"><span data-i18n="cart-qty">Qty</span>: {{ item.quantity }} × {{ "%.2f"|format(item.price_at_purchase) }} EGP</div>
             </div>
             <div class="fw-700 text-success">{{ "%.2f"|format(item.subtotal) }} EGP</div>
           </div>

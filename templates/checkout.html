@@ -161,9 +161,10 @@
                    style="width:44px;height:44px;border-radius:6px;object-fit:cover;" data-product-img />
               <div>
                 <div class="small fw-600" style="max-width:160px;" class="text-truncate">
-                  {{ item.product.name[:30] }}{% if item.product.name|length > 30 %}â€¦{% endif %}
+                  {% set p_name = item.product.name_ar if lang == 'ar' and item.product.name_ar else item.product.name %}
+                  {{ p_name[:30] }}{% if p_name|length > 30 %}...{% endif %}
                 </div>
-                <div class="small text-muted">Qty: {{ item.quantity }}</div>
+                <div class="small text-muted"><span data-i18n="cart-qty">Qty</span>: {{ item.quantity }}</div>
               </div>
             </div>
             <div class="fw-600 small">{{ "%.2f"|format(item.product.price * item.quantity) }} EGP</div>

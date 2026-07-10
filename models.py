@@ -60,6 +60,7 @@ class Category(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
+    name_ar = db.Column(db.String(100), nullable=True)          # Arabic name
     description = db.Column(db.Text, nullable=True)
     icon = db.Column(db.String(100), nullable=True, default='bi-bag')  # Bootstrap icon class
 
@@ -80,7 +81,9 @@ class Product(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
+    name_ar = db.Column(db.String(200), nullable=True)           # Arabic product name
     description = db.Column(db.Text, nullable=True)
+    description_ar = db.Column(db.Text, nullable=True)           # Arabic product description
     price = db.Column(db.Float, nullable=False)
     stock_quantity = db.Column(db.Integer, nullable=False, default=0)
     image_url = db.Column(db.String(500), nullable=True)

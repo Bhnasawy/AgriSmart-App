@@ -9,14 +9,16 @@
   <!-- Breadcrumb -->
   <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-success">Home</a></li>
-      <li class="breadcrumb-item"><a href="{{ url_for('main.shop') }}" class="text-success">Shop</a></li>
+      <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-success" data-i18n="nav-home">Home</a></li>
+      <li class="breadcrumb-item"><a href="{{ url_for('main.shop') }}" class="text-success" data-i18n="nav-shop">Shop</a></li>
       <li class="breadcrumb-item">
         <a href="{{ url_for('main.shop', category=product.category_id) }}" class="text-success">
-          {{ product.category.name }}
+          {{ product.category.name_ar if lang == 'ar' and product.category.name_ar else product.category.name }}
         </a>
       </li>
-      <li class="breadcrumb-item active text-truncate" style="max-width:220px;">{{ product.name }}</li>
+      <li class="breadcrumb-item active text-truncate" style="max-width:220px;">
+        {{ product.name_ar if lang == 'ar' and product.name_ar else product.name }}
+      </li>
     </ol>
   </nav>
 
@@ -29,26 +31,26 @@
       <!-- Product Image -->
       <div class="col-lg-5">
         <img src="{{ product.image_url or url_for('static', filename='images/placeholder.svg') }}"
-             alt="{{ product.name }}"
+             alt="{{ product.name_ar if lang == 'ar' and product.name_ar else product.name }}"
              class="product-detail-img"
              data-product-img />
         <!-- Badges -->
         <div class="mt-3 d-flex gap-2 flex-wrap">
           {% if product.is_featured %}
-          <span class="badge bg-success"><i class="bi bi-star-fill me-1"></i>Featured</span>
+          <span class="badge bg-success"><i class="bi bi-star-fill me-1"></i><span data-i18n="badge-featured">Featured</span></span>
           {% endif %}
           {% if product.is_best_seller %}
           <span class="badge" style="background:var(--accent);">
-            <i class="bi bi-fire me-1"></i>Best Seller
+            <i class="bi bi-fire me-1"></i><span data-i18n="badge-bestseller">Best Seller</span>
           </span>
           {% endif %}
           {% if product.is_available %}
           <span class="badge bg-success bg-opacity-15 text-success border border-success">
-            <i class="bi bi-check-circle me-1"></i>In Stock
+            <i class="bi bi-check-circle me-1"></i><span data-i18n="prod-in-stock">In Stock</span>
           </span>
           {% else %}
           <span class="badge bg-danger bg-opacity-15 text-danger border border-danger">
-            <i class="bi bi-x-circle me-1"></i>Out of Stock
+            <i class="bi bi-x-circle me-1"></i><span data-i18n="prod-out-stock">Out of Stock</span>
           </span>
           {% endif %}
         </div>
@@ -60,11 +62,13 @@
         <a href="{{ url_for('main.shop', category=product.category_id) }}"
            class="text-decoration-none">
           <span class="badge bg-success bg-opacity-10 text-success mb-2" style="font-size:0.85rem;">
-            <i class="bi {{ product.category.icon }} me-1"></i>{{ product.category.name }}
+            <i class="bi {{ product.category.icon }} me-1"></i>{{ product.category.name_ar if lang == 'ar' and product.category.name_ar else product.category.name }}
           </span>
         </a>
 
-        <h1 class="fw-800 mb-3" style="font-size:1.8rem;line-height:1.3;">{{ product.name }}</h1>
+        <h1 class="fw-800 mb-3" style="font-size:1.8rem;line-height:1.3;">
+          {{ product.name_ar if lang == 'ar' and product.name_ar else product.name }}
+        </h1>
 
         <!-- Price -->
         <div class="product-detail-price mb-3">{{ "%.2f"|format(product.price) }} EGP</div>
@@ -73,15 +77,17 @@
         <p class="mb-3">
           {% if product.is_available %}
           <i class="bi bi-box-seam text-success me-1"></i>
-          <span class="text-success fw-600">{{ product.stock_quantity }} units available</span>
+          <span class="text-success fw-600"><span data-i18n="prod-detail-units">units available</span> ({{ product.stock_quantity }})</span>
           {% else %}
           <i class="bi bi-x-circle text-danger me-1"></i>
-          <span class="text-danger fw-600">Currently out of stock</span>
+          <span class="text-danger fw-600" data-i18n="prod-detail-out">Currently out of stock</span>
           {% endif %}
         </p>
 
         <!-- Description -->
-        {% if product.description %}
+        {% if product.description_ar and lang == 'ar' %}
+        <p class="text-muted mb-4" style="line-height:1.8;">{{ product.description_ar }}</p>
+        {% elif product.description %}
         <p class="text-muted mb-4" style="line-height:1.8;">{{ product.description }}</p>
         {% endif %}
 
@@ -91,7 +97,7 @@
         {% if product.is_available %}
         <form action="{{ url_for('main.add_to_cart', product_id=product.id) }}" method="POST">
           <div class="d-flex align-items-center gap-3 mb-4">
-            <label class="fw-600 mb-0">Quantity:</label>
+            <label class="fw-600 mb-0" data-i18n="cart-qty">Quantity:</label>
             <div class="d-flex align-items-center gap-2">
               <button type="button" class="btn btn-outline-secondary btn-sm"
                       data-qty-btn="dec" data-target="detailQty">
@@ -108,17 +114,17 @@
           </div>
           <div class="d-flex gap-3 flex-wrap">
             <button type="submit" class="btn btn-primary btn-lg px-5">
-              <i class="bi bi-cart-plus me-2"></i>Add to Cart
+              <i class="bi bi-cart-plus me-2"></i><span data-i18n="prod-add-cart">Add to Cart</span>
             </button>
             <a href="{{ url_for('main.cart') }}" class="btn btn-outline-primary btn-lg px-4">
-              <i class="bi bi-cart3 me-2"></i>View Cart
+              <i class="bi bi-cart3 me-2"></i><span data-i18n="prod-view-cart">View Cart</span>
             </a>
           </div>
         </form>
         {% else %}
         <div class="alert alert-warning">
           <i class="bi bi-exclamation-triangle me-2"></i>
-          This product is currently out of stock. Please check back later.
+          <span data-i18n="prod-detail-warn">This product is currently out of stock. Please check back later.</span>
         </div>
         {% endif %}
 
@@ -127,25 +133,25 @@
           <div class="col-6">
             <div class="d-flex align-items-center gap-2 p-2 rounded bg-pale-green">
               <i class="bi bi-truck text-success"></i>
-              <small class="text-muted">Fast Delivery</small>
+              <small class="text-muted" data-i18n="feat-delivery">Fast Delivery</small>
             </div>
           </div>
           <div class="col-6">
             <div class="d-flex align-items-center gap-2 p-2 rounded bg-pale-green">
               <i class="bi bi-patch-check text-success"></i>
-              <small class="text-muted">Certified Quality</small>
+              <small class="text-muted" data-i18n="feat-quality">Certified Quality</small>
             </div>
           </div>
           <div class="col-6">
             <div class="d-flex align-items-center gap-2 p-2 rounded bg-pale-green">
               <i class="bi bi-arrow-counterclockwise text-success"></i>
-              <small class="text-muted">Easy Returns</small>
+              <small class="text-muted" data-i18n="feat-returns">Easy Returns</small>
             </div>
           </div>
           <div class="col-6">
             <div class="d-flex align-items-center gap-2 p-2 rounded bg-pale-green">
               <i class="bi bi-shield-check text-success"></i>
-              <small class="text-muted">Secure Payment</small>
+              <small class="text-muted" data-i18n="feat-secure">Secure Payment</small>
             </div>
           </div>
         </div>
@@ -158,7 +164,7 @@
        ========================================================================= -->
   {% if related %}
   <div class="mb-5">
-    <h3 class="section-title mb-4">Related Products</h3>
+    <h3 class="section-title mb-4" data-i18n="prod-related">Related Products</h3>
     <div class="row g-4">
       {% for p in related %}
       {% set product = p %}

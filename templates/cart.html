@@ -26,7 +26,8 @@
       <div class="bg-white rounded-xl shadow-green p-0 overflow-hidden">
         <div class="p-3 border-bottom" style="background:var(--primary-pale);">
           <h5 class="mb-0 text-success fw-700">
-            <i class="bi bi-bag me-2"></i>{{ cart_items|length }} Item{{ 's' if cart_items|length != 1 else '' }} in Cart
+            <i class="bi bi-bag me-2"></i>{{ cart_items|length }} Item{{ 's' if cart_items|length != 1 else '' }} in
+            Cart
           </h5>
         </div>
 
@@ -48,12 +49,11 @@
                 <td>
                   <div class="d-flex align-items-center gap-3">
                     <img src="{{ item.product.image_url or url_for('static', filename='images/placeholder.svg') }}"
-                         alt="{{ item.product.name }}"
-                         style="width:64px;height:64px;object-fit:cover;border-radius:8px;"
-                         data-product-img />
+                      alt="{{ item.product.name }}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;"
+                      data-product-img />
                     <div>
                       <a href="{{ url_for('main.product_detail', product_id=item.product.id) }}"
-                         class="text-decoration-none fw-600 text-dark">
+                        class="text-decoration-none fw-600 text-dark">
                         {{ item.product.name }}
                       </a>
                       <div class="small text-muted">{{ item.product.category.name }}</div>
@@ -69,17 +69,16 @@
                 <!-- Quantity -->
                 <td class="text-center">
                   <form action="{{ url_for('main.update_cart', item_id=item.id) }}" method="POST"
-                        class="d-flex justify-content-center align-items-center gap-1">
-                    <button type="button" class="btn btn-outline-secondary btn-sm"
-                            data-qty-btn="dec" data-target="qty_{{ item.id }}">
+                    class="d-flex justify-content-center align-items-center gap-1">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-qty-btn="dec"
+                      data-target="qty_{{ item.id }}">
                       <i class="bi bi-dash"></i>
                     </button>
-                    <input type="number" id="qty_{{ item.id }}" name="quantity"
-                           value="{{ item.quantity }}" min="1" max="{{ item.product.stock_quantity }}"
-                           class="quantity-input cart-qty-input form-control form-control-sm"
-                           style="width:60px;" />
-                    <button type="button" class="btn btn-outline-secondary btn-sm"
-                            data-qty-btn="inc" data-target="qty_{{ item.id }}">
+                    <input type="number" id="qty_{{ item.id }}" name="quantity" value="{{ item.quantity }}" min="1"
+                      max="{{ item.product.stock_quantity }}"
+                      class="quantity-input cart-qty-input form-control form-control-sm" style="width:60px;" />
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-qty-btn="inc"
+                      data-target="qty_{{ item.id }}">
                       <i class="bi bi-plus"></i>
                     </button>
                   </form>
@@ -94,7 +93,7 @@
                 <td class="text-center">
                   <form action="{{ url_for('main.remove_from_cart', item_id=item.id) }}" method="POST">
                     <button type="submit" class="btn btn-outline-danger btn-sm"
-                            onclick="return confirmDelete('Remove this item from cart?')">
+                      onclick="return confirmDelete('Remove this item from cart?')">
                       <i class="bi bi-trash3"></i>
                     </button>
                   </form>
@@ -123,7 +122,8 @@
 
         {% for item in cart_items %}
         <div class="summary-row">
-          <span class="text-muted small">{{ item.product.name[:28] }}{% if item.product.name|length > 28 %}â€¦{% endif %} Ã—{{ item.quantity }}</span>
+          <span class="text-muted small">{{ item.product.name[:28] }}{% if item.product.name|length > 28 %}â€¦{% endif
+            %} Ã—{{ item.quantity }}</span>
           <span class="small fw-600">{{ "%.2f"|format(item.product.price * item.quantity) }} EGP</span>
         </div>
         {% endfor %}

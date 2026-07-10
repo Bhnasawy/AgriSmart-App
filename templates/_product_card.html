@@ -3,16 +3,16 @@
   <a href="{{ url_for('main.product_detail', product_id=product.id) }}">
     <div class="img-wrapper">
       <img src="{{ product.image_url or url_for('static', filename='images/placeholder.svg') }}"
-           alt="{{ product.name }}"
+           alt="{{ product.name_ar if lang == 'ar' and product.name_ar else product.name }}"
            data-product-img
            loading="lazy" />
       {% if not product.is_available %}
-      <div class="out-of-stock-overlay">Out of Stock</div>
+      <div class="out-of-stock-overlay" data-i18n="prod-out-stock">Out of Stock</div>
       {% endif %}
       {% if product.is_featured %}
-      <span class="badge-corner">Featured</span>
+      <span class="badge-corner" data-i18n="badge-featured">Featured</span>
       {% elif product.is_best_seller %}
-      <span class="badge-corner accent">Best Seller</span>
+      <span class="badge-corner accent" data-i18n="badge-bestseller">Best Seller</span>
       {% endif %}
     </div>
   </a>
@@ -20,20 +20,25 @@
   <!-- Body -->
   <div class="card-body d-flex flex-column">
     <div class="product-category">
-      <i class="bi {{ product.category.icon }} me-1"></i>{{ product.category.name }}
+      <i class="bi {{ product.category.icon }} me-1"></i>
+      {{ product.category.name_ar if lang == 'ar' and product.category.name_ar else product.category.name }}
     </div>
     <a href="{{ url_for('main.product_detail', product_id=product.id) }}" class="text-decoration-none">
-      <div class="product-name">{{ product.name }}</div>
+      <div class="product-name">
+        {{ product.name_ar if lang == 'ar' and product.name_ar else product.name }}
+      </div>
     </a>
     <div class="product-price">{{ "%.2f"|format(product.price) }} EGP</div>
 
     {% if product.is_available %}
       <span class="stock-badge badge bg-success bg-opacity-10 text-success mb-2">
-        <i class="bi bi-check-circle me-1"></i>In Stock ({{ product.stock_quantity }})
+        <i class="bi bi-check-circle me-1"></i>
+        <span data-i18n="prod-in-stock">In Stock</span> ({{ product.stock_quantity }})
       </span>
     {% else %}
       <span class="stock-badge badge bg-danger bg-opacity-10 text-danger mb-2">
-        <i class="bi bi-x-circle me-1"></i>Out of Stock
+        <i class="bi bi-x-circle me-1"></i>
+        <span data-i18n="prod-out-stock">Out of Stock</span>
       </span>
     {% endif %}
 
@@ -41,12 +46,14 @@
     <form action="{{ url_for('main.add_to_cart', product_id=product.id) }}" method="POST" class="mt-auto w-100">
       <input type="hidden" name="quantity" value="1" />
       <button type="submit" class="btn btn-primary w-100 btn-sm mt-2">
-        <i class="bi bi-cart-plus me-1"></i>Add to Cart
+        <i class="bi bi-cart-plus me-1"></i>
+        <span data-i18n="prod-add-cart">Add to Cart</span>
       </button>
     </form>
     {% else %}
     <button class="btn btn-secondary w-100 btn-sm mt-auto" disabled>
-      <i class="bi bi-x-circle me-1"></i>Unavailable
+      <i class="bi bi-x-circle me-1"></i>
+      <span data-i18n="prod-out-stock">Unavailable</span>
     </button>
     {% endif %}
   </div>

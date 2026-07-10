@@ -49,12 +49,12 @@
             <div class="d-flex align-items-center gap-3 py-2 border-bottom">
               <img src="{{ item.product.image_url or url_for('static', filename='images/placeholder.svg') }}"
                    style="width:56px;height:56px;border-radius:8px;object-fit:cover;"
-                   data-product-img alt="{{ item.product.name }}" />
+                   data-product-img alt="{{ item.product.name_ar if lang == 'ar' and item.product.name_ar else item.product.name }}" />
               <div class="flex-grow-1">
                 <a href="{{ url_for('main.product_detail', product_id=item.product.id) }}"
-                   class="text-decoration-none fw-600 text-dark">{{ item.product.name }}</a>
+                   class="text-decoration-none fw-600 text-dark">{{ item.product.name_ar if lang == 'ar' and item.product.name_ar else item.product.name }}</a>
                 <div class="small text-muted">
-                  Qty: {{ item.quantity }} Ã— {{ "%.2f"|format(item.price_at_purchase) }} EGP
+                  <span data-i18n="cart-qty">Qty</span>: {{ item.quantity }} × {{ "%.2f"|format(item.price_at_purchase) }} EGP
                 </div>
               </div>
               <div class="fw-700 text-success">{{ "%.2f"|format(item.subtotal) }} EGP</div>

@@ -23,19 +23,32 @@
             method="POST" enctype="multipart/form-data" novalidate>
         <div class="row g-3">
 
-          <!-- Product Name -->
-          <div class="col-12">
-            <label for="name" class="form-label fw-600">Product Name <span class="text-danger">*</span></label>
+          <!-- Product Name (EN/AR) -->
+          <div class="col-md-6">
+            <label for="name" class="form-label fw-600">Product Name (EN) <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="name" name="name"
                    value="{{ product.name if is_edit else '' }}"
-                   placeholder="Enter product name" required />
+                   placeholder="Enter product name in English" required />
+          </div>
+          <div class="col-md-6">
+            <label for="name_ar" class="form-label fw-600" dir="rtl">اسم المنتج (عربي)</label>
+            <input type="text" class="form-control" id="name_ar" name="name_ar" dir="rtl"
+                   value="{{ product.name_ar if is_edit and product.name_ar else '' }}"
+                   placeholder="أدخل اسم المنتج بالعربية" />
           </div>
 
-          <!-- Description -->
+          <!-- Description (EN) -->
           <div class="col-12">
-            <label for="description" class="form-label fw-600">Description</label>
-            <textarea class="form-control" id="description" name="description" rows="4"
-                      placeholder="Describe the product in detail…">{{ product.description if is_edit else '' }}</textarea>
+            <label for="description" class="form-label fw-600">Description (EN)</label>
+            <textarea class="form-control" id="description" name="description" rows="3"
+                      placeholder="Describe the product in English…">{{ product.description if is_edit else '' }}</textarea>
+          </div>
+
+          <!-- Description (AR) -->
+          <div class="col-12">
+            <label for="description_ar" class="form-label fw-600" dir="rtl">الوصف (عربي)</label>
+            <textarea class="form-control" id="description_ar" name="description_ar" rows="3" dir="rtl"
+                      placeholder="أدخل وصف المنتج بالعربية...">{{ product.description_ar if is_edit and product.description_ar else '' }}</textarea>
           </div>
 
           <!-- Price & Stock -->

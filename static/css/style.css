@@ -95,6 +95,8 @@ a:hover {
   color: #fff;
   border-radius: var(--radius-sm);
   font-weight: 600;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
   transition: var(--transition);
 }
 
@@ -103,6 +105,34 @@ a:hover {
   border-color: #e65100;
   color: #fff;
   transform: translateY(-1px);
+}
+
+/* Hero Buttons - equal size & responsive */
+.hero-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.hero-btn-group .btn {
+  flex: 1 1 180px;
+  max-width: 230px;
+  min-width: 160px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+@media (max-width: 575.98px) {
+  .hero-btn-group {
+    justify-content: center;
+  }
+  .hero-btn-group .btn {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
 }
 
 .badge.bg-primary   { background-color: var(--primary) !important; }
@@ -1162,6 +1192,9 @@ a:hover {
   width: 100%;
   border-radius: 10px;
   font-weight: 700;
+  font-size: 1rem;
+  padding: 0.75rem 1.25rem;
+  text-align: center;
 }
 .ai-btn-red {
   background-color: #dc3545;
@@ -1309,3 +1342,128 @@ a:hover {
   padding-top: 1.2rem;
   margin-top: 0.5rem;
 }
+
+/* ==========================================================================
+   Language Toggle Button
+   ========================================================================== */
+.lang-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.18);
+  border: 1.5px solid rgba(255,255,255,0.45);
+  color: #fff;
+  border-radius: 20px;
+  padding: 4px 13px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.lang-toggle-btn:hover {
+  background: rgba(255,255,255,0.32);
+  border-color: rgba(255,255,255,0.7);
+  transform: translateY(-1px);
+}
+
+.lang-toggle-btn i {
+  font-size: 1rem;
+}
+
+/* ==========================================================================
+   RTL / Arabic Mode
+   ========================================================================== */
+[dir="rtl"] body {
+  font-family: 'Cairo', 'Tajawal', 'Inter', sans-serif;
+  text-align: right;
+}
+
+[dir="rtl"] .navbar-nav {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .me-1  { margin-right: 0 !important; margin-left: 0.25rem !important; }
+[dir="rtl"] .me-2  { margin-right: 0 !important; margin-left: 0.5rem  !important; }
+[dir="rtl"] .ms-1  { margin-left:  0 !important; margin-right: 0.25rem !important; }
+[dir="rtl"] .ms-auto { margin-left: 0 !important; margin-right: auto !important; }
+[dir="rtl"] .me-auto { margin-right: 0 !important; margin-left: auto !important; }
+
+[dir="rtl"] .dropdown-menu {
+  text-align: right;
+}
+
+[dir="rtl"] .footer {
+  text-align: right;
+}
+
+/* ==========================================================================
+   Mobile Fixes — Hero Buttons & CTA Buttons
+   ========================================================================== */
+
+/* Fix: hero "Shop Now" + "Browse Categories" buttons on small screens */
+@media (max-width: 576px) {
+  /* Hero buttons — stack vertically, full width */
+  .hero-section .d-flex.flex-wrap {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.75rem !important;
+  }
+
+  .hero-section .d-flex.flex-wrap .btn {
+    width: 100% !important;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
+
+  /* CTA section — stack "Get Started Free" + "Browse Products" vertically */
+  .cta-btn-group {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+  }
+
+  .cta-btn-group .btn {
+    width: 80% !important;
+    margin: 0 !important;
+  }
+}
+
+/* Tablet: keep buttons side by side but add spacing */
+@media (min-width: 577px) and (max-width: 768px) {
+  .hero-section .d-flex.flex-wrap {
+    gap: 0.75rem !important;
+  }
+}
+
+/* ==========================================================================
+   Navbar Mobile — lang button position fix
+   ========================================================================== */
+
+/* On mobile: navbar bar = brand (left) | [lang-btn + hamburger] (right) */
+.navbar > .container {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+/* The mobile lang btn sits between brand and toggler — remove ms-auto push,
+   use a small fixed gap instead */
+@media (max-width: 991.98px) {
+  #langToggleBtn.d-lg-none {
+    margin-left: auto;   /* push it (+ toggler) to right */
+    margin-right: 0.5rem;
+  }
+
+  /* RTL: flip the margin direction */
+  [dir="rtl"] #langToggleBtn.d-lg-none {
+    margin-left: 0.5rem;
+    margin-right: auto;
+  }
+}
+

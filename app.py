@@ -3,7 +3,7 @@ app.py - Flask application factory and entry point for AgriSmart
 """
 
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request, make_response
 from flask_login import LoginManager
 from config import Config
 from models import db, User, Category, Product, DiseaseTreatment
@@ -29,7 +29,7 @@ def create_app():
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'
-    login_manager.login_message = 'Please log in to access this page.'
+    login_manager.login_message = 'يجب تسجيل الدخول أولاً للوصول إلى هذه الصفحة. | Please log in first to access this page.'
     login_manager.login_message_category = 'warning'
 
     @login_manager.user_loader
@@ -50,6 +50,30 @@ def create_app():
 
     # Inject cart count into all templates
     app.context_processor(inject_cart_count)
+
+    # -----------------------------------------------------------------------
+    # Inject current language into all templates
+    # -----------------------------------------------------------------------
+    @app.context_processor
+    def inject_lang():
+        """Pass the current UI language ('en' or 'ar') to every template."""
+        lang = request.cookies.get('agrismart_lang', 'en')
+        if lang not in ('en', 'ar'):
+            lang = 'en'
+        return {'lang': lang}
+
+    # -----------------------------------------------------------------------
+    # Language switch route (called by JS fetch)
+    # -----------------------------------------------------------------------
+    @app.route('/set-lang/<lang>')
+    def set_lang(lang):
+        """Store language preference in a cookie and redirect back."""
+        if lang not in ('en', 'ar'):
+            lang = 'en'
+        referrer = request.referrer or '/'
+        resp = make_response('', 204)   # No-content (JS handles reload)
+        resp.set_cookie('agrismart_lang', lang, max_age=60*60*24*365, samesite='Lax')
+        return resp
 
     # -----------------------------------------------------------------------
     # Custom error handlers

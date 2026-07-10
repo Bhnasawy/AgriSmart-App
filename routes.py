@@ -73,6 +73,7 @@ def index():
 # Shop
 # ---------------------------------------------------------------------------
 @main.route('/shop')
+@login_required
 def shop():
     """Browse all products with search and category filter."""
     search_query = request.args.get('q', '').strip()
@@ -101,6 +102,7 @@ def shop():
 # Categories
 # ---------------------------------------------------------------------------
 @main.route('/categories')
+@login_required
 def categories():
     """Display all product categories."""
     all_categories = Category.query.all()
@@ -111,6 +113,7 @@ def categories():
 # Product Detail
 # ---------------------------------------------------------------------------
 @main.route('/product/<int:product_id>')
+@login_required
 def product_detail(product_id):
     """Show full product details page."""
     product = Product.query.get_or_404(product_id)
@@ -442,6 +445,7 @@ def my_orders():
 # About
 # ---------------------------------------------------------------------------
 @main.route('/about')
+@login_required
 def about():
     return render_template('about.html')
 
@@ -450,6 +454,7 @@ def about():
 # Contact
 # ---------------------------------------------------------------------------
 @main.route('/contact', methods=['GET', 'POST'])
+@login_required
 def contact():
     if request.method == 'POST':
         flash('Thank you for your message! We will get back to you shortly.', 'success')
@@ -534,7 +539,9 @@ def admin_add_product():
 
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
+        name_ar = request.form.get('name_ar', '').strip()
         description = request.form.get('description', '').strip()
+        description_ar = request.form.get('description_ar', '').strip()
         price = float(request.form.get('price', 0))
         stock_quantity = int(request.form.get('stock_quantity', 0))
         category_id = int(request.form.get('category_id', 0))
@@ -554,7 +561,9 @@ def admin_add_product():
 
         product = Product(
             name=name,
+            name_ar=name_ar,
             description=description,
+            description_ar=description_ar,
             price=price,
             stock_quantity=stock_quantity,
             category_id=category_id,
@@ -580,7 +589,9 @@ def admin_edit_product(product_id):
 
     if request.method == 'POST':
         product.name = request.form.get('name', '').strip()
+        product.name_ar = request.form.get('name_ar', '').strip()
         product.description = request.form.get('description', '').strip()
+        product.description_ar = request.form.get('description_ar', '').strip()
         product.price = float(request.form.get('price', 0))
         product.stock_quantity = int(request.form.get('stock_quantity', 0))
         product.category_id = int(request.form.get('category_id', 0))
@@ -935,12 +946,14 @@ def _get_ip():
 # ---------------------------------------------------------------------------
 
 @main.route('/ai/tomato')
+@login_required
 def ai_tomato():
     """Tomato Leaf Disease Diagnosis page."""
     return render_template('ai/tomato.html')
 
 
 @main.route('/ai/crop')
+@login_required
 def ai_crop():
     """Crop Recommendation System page."""
     return render_template('ai/crop.html')
@@ -951,6 +964,7 @@ def ai_crop():
 # ---------------------------------------------------------------------------
 
 @main.route('/weather/<city>')
+@login_required
 def get_weather(city):
     """Proxy weather API for crop recommendation weather autofill."""
     if not city or not city.strip():
@@ -987,6 +1001,7 @@ def get_weather(city):
 # ---------------------------------------------------------------------------
 
 @main.route('/api/tomato/predict', methods=['POST'])
+@login_required
 def api_tomato_predict():
     """Tomato leaf disease prediction endpoint."""
     tomato_interpreter = getattr(current_app, 'tomato_interpreter', None)
@@ -1074,6 +1089,7 @@ def api_tomato_predict():
 
 
 @main.route('/api/crop/predict', methods=['POST'])
+@login_required
 def api_crop_predict():
     """Crop recommendation prediction endpoint."""
     crop_model  = getattr(current_app, 'crop_model', None)
